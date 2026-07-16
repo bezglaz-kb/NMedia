@@ -12,6 +12,7 @@
         android:id="@+id/avatar"
         android:layout_width="@dimen/imageSize"
         android:layout_height="@dimen/imageSize"
+        android:contentDescription="@string/description_post_author_avatar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/barrierHeader"
@@ -35,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padding"
+        android:contentDescription="@string/description_post_menu"
         app:layout_constraintTop_toBottomOf="@id/author"
         app:layout_constraintBottom_toBottomOf="@id/avatar"
         app:layout_constraintStart_toEndOf="@id/avatar"
@@ -46,6 +48,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_more_vert_24"
         android:background="@android:color/transparent"
+        android:contentDescription="@string/description_post_menu"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -72,6 +75,7 @@
         android:src="@drawable/ic_like_24"
         android:background="@android:color/transparent"
         android:layout_marginTop="@dimen/padding"
+        android:contentDescription="@string/description_like"
         app:layout_constraintTop_toBottomOf="@id/content"/>
 
     <TextView
@@ -82,7 +86,7 @@
         app:layout_constraintBottom_toBottomOf="@id/like"
         app:layout_constraintStart_toEndOf="@id/like"
         android:layout_marginStart="@dimen/indent"
-        android:text="10"/>
+        android:text="@string/countOfLikes"/>
 
     <ImageButton
         android:id="@+id/share"
@@ -91,6 +95,7 @@
         android:src="@drawable/baseline_share_24"
         android:background="@android:color/transparent"
         android:layout_marginStart="@dimen/padding"
+        android:contentDescription="@string/description_share"
         app:layout_constraintTop_toTopOf="@id/like"
         app:layout_constraintStart_toEndOf="@id/countLikes"/>
 
@@ -102,7 +107,7 @@
         app:layout_constraintBottom_toBottomOf="@id/share"
         app:layout_constraintStart_toEndOf="@id/share"
         android:layout_marginStart="@dimen/indent"
-        android:text="5"/>
+        android:text="@string/countOfShares"/>
 
     <ImageView
         android:id="@+id/view"
@@ -110,6 +115,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_eye_24"
         android:layout_marginEnd="@dimen/indent"
+        android:contentDescription="@string/description_views"
         app:layout_constraintTop_toTopOf="@id/like"
         app:layout_constraintBottom_toBottomOf="@id/like"
         app:layout_constraintEnd_toStartOf="@id/countViews"/>
@@ -119,7 +125,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/indent"
-        android:text="77"
+        android:text="@string/countOfViews"
         app:layout_constraintTop_toTopOf="@id/view"
         app:layout_constraintBottom_toBottomOf="@id/view"
         app:layout_constraintEnd_toEndOf="parent"/>
