@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     tools:context=".MainActivity">
-    
+
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="@dimen/imageSize"
@@ -41,7 +41,7 @@
         app:layout_constraintBottom_toBottomOf="@id/avatar"
         app:layout_constraintStart_toEndOf="@id/avatar"
         tools:text="@sample/posts.json/data/published"/>
-    
+
     <ImageButton
         android:id="@+id/menu"
         android:layout_width="wrap_content"
