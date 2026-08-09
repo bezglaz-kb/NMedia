@@ -9,4 +9,8 @@
     <string name="countOfLikes" translatable="false">10</string>
     <string name="countOfShares" translatable="false">5</string>
     <string name="countOfViews" translatable="false">77</string>
+    <string name="remove">Remove</string>
+    <string name="content">Content</string>
+    <string name="text_is_blank">Text is blank!</string>
+    <string name="edit">Edit</string>
 </resources>
