@@ -10,33 +10,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/editCancelGroup"
-        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/card_post" />
-
-    <EditText
-        android:id="@+id/content"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:hint="@string/content"
-        android:importantForAutofill="no"
-        android:inputType="textMultiLine"
-        android:padding="@dimen/padding"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/save"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/content"
-        app:srcCompat="@drawable/ic_save_48" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/editCancelGroup"
@@ -45,7 +21,7 @@
         android:background="?android:attr/windowBackground"
         android:padding="8dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/content"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:visibility="visible">
 
         <TextView
@@ -71,4 +47,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/description_post_save"
+        app:srcCompat = "@drawable/outline_add_24"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

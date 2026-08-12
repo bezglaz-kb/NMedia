@@ -6,4 +6,7 @@
     <string name="content">Текст</string>
     <string name="text_is_blank">Текст пустой!</string>
     <string name="edit">Редактировать</string>
+    <string name="chooser_share_post">Поделиться постом</string>
+    <string name="description_post_save">Сохранить</string>
+    <string name="description_video">Изображение видеоролика</string>
 </resources>

@@ -70,6 +70,39 @@
         app:layout_constraintTop_toBottomOf="@id/barrierHeader"
         tools:text="@sample/posts.json/data/content" />
 
+    <ImageView
+        android:id="@+id/videoWallpaper"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/video_wallpaper"
+        android:background="#E0E0E0"
+        android:contentDescription="@string/description_video"
+        app:layout_constraintTop_toBottomOf="@id/content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/videoPlayButton"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@android:drawable/ic_media_play"
+        android:contentDescription="@string/description_video"
+        app:tint="@android:color/black"
+        app:layout_constraintTop_toTopOf="@id/videoWallpaper"
+        app:layout_constraintBottom_toBottomOf="@id/videoWallpaper"
+        app:layout_constraintStart_toStartOf="@id/videoWallpaper"
+        app:layout_constraintEnd_toEndOf="@id/videoWallpaper" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/videoGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:clickable="true"
+        app:constraint_referenced_ids="videoWallpaper,videoPlayButton" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/like"
         style="@style/Widget.Material3.Button.TextButton.Icon"
@@ -84,7 +117,7 @@
         android:minHeight="0dp"
         app:icon="@drawable/ic_like_selector"
         app:iconTint="@color/like_selector"
-        app:layout_constraintTop_toBottomOf="@id/content" />
+        app:layout_constraintTop_toBottomOf="@id/videoWallpaper" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/share"
@@ -98,6 +131,8 @@
         android:minWidth="0dp"
         android:minHeight="0dp"
         app:icon="@drawable/baseline_share_24"
+        app:iconTint="?attr/colorControlNormal"
+        android:textColor="?attr/colorControlNormal"
         app:layout_constraintStart_toEndOf="@id/like"
         app:layout_constraintTop_toTopOf="@id/like" />
 

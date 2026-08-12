@@ -1,9 +1,9 @@
 package ru.netology.nmedia.activity
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.core.net.toUri
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,11 +13,18 @@ import ru.netology.nmedia.adapter.PostAdapter
 import ru.netology.nmedia.adapter.PostListener
 import ru.netology.nmedia.databinding.ActivityMainBinding
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.util.AndroidUtils
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: PostViewModel by viewModels()
+    val postContract = registerForActivityResult(NewPostContract) { result ->
+        if (result == null) {
+            viewModel.cancelEdit()
+            return@registerForActivityResult
+        }
+        viewModel.save(result)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -42,6 +49,15 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onShare(post: Post) {
                     viewModel.shareById(post.id)
+                    val intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, post.content)
+                    }
+
+                    val chooser =
+                        Intent.createChooser(intent, getString(R.string.chooser_share_post))
+                    startActivity(chooser)
                 }
 
                 override fun onRemove(post: Post) {
@@ -50,6 +66,13 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onEdit(post: Post) {
                     viewModel.edit(post)
+                    postContract.launch(post.content)
+                }
+
+                override fun onPlayVideo(post: Post) {
+                    val videoUrl = post.video ?: return
+                    val intent = Intent(Intent.ACTION_VIEW, videoUrl.toUri())
+                    startActivity(intent)
                 }
             }
         )
@@ -60,36 +83,8 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(posts)
         }
 
-        viewModel.edited.observe(this) { edited ->
-            if (edited.id != 0L) {
-                binding.editCancelGroup.visibility = View.VISIBLE
-                binding.content.setText(edited.content)
-                AndroidUtils.showKeyboard(binding.content)
-            } else {
-                binding.editCancelGroup.visibility = View.GONE
-                binding.content.setText("")
-                binding.content.clearFocus()
-                AndroidUtils.hideKeyboard(binding.content)
-            }
-        }
-
-        binding.save.setOnClickListener {
-            val content = binding.content.text?.toString()
-
-            if (content.isNullOrBlank()) {
-                Toast.makeText(this, R.string.text_is_blank, Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            viewModel.save(content)
-            binding.content.clearFocus()
-            binding.content.setText("")
-
-            AndroidUtils.hideKeyboard(binding.content)
-        }
-
-        binding.cancelEditButton.setOnClickListener {
-            viewModel.cancelEdit()
+        binding.add.setOnClickListener {
+            postContract.launch(null)
         }
     }
 }

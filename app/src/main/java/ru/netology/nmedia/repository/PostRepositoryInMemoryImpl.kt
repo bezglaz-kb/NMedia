@@ -14,7 +14,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             likes = 999,
             likedByMe = false,
             shares = 999_999,
-            views = 1_999_999
+            views = 1_999_999,
+            video = if (it == 99) "https://rutube.ru" else null
         )
     }
         .reversed()
