@@ -59,7 +59,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
 
     override fun save(post: Post) {
         if (post.id == 0L) {
-            posts = listOf(post.copy(author = "Me", likes = 0, published = "Now")) + posts
+            val nextId = (posts.maxOfOrNull { it.id } ?: 0L) + 1L
+            posts = listOf(post.copy(id = nextId, author = "Me", likes = 0, published = "Now")) + posts
         } else {
             posts = posts.map {
                 if (it.id == post.id) {
