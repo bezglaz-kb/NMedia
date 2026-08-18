@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.formatCount
+import ru.netology.nmedia.util.formatCount
 
 interface PostListener {
     fun onLike(post: Post)
@@ -18,6 +18,7 @@ interface PostListener {
     fun onRemove(post: Post)
     fun onEdit(post: Post)
     fun onPlayVideo(post: Post) {}
+    fun onPostClick (post: Post)
 }
 
 class PostAdapter(
@@ -96,6 +97,9 @@ class PostAdapter(
                 }
                 share.setOnClickListener {
                     listener.onShare(post)
+                }
+                postCard.setOnClickListener {
+                    listener.onPostClick(post)
                 }
             }
         }

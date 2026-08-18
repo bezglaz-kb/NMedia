@@ -1,45 +1,33 @@
-package ru.netology.nmedia.activity
+package ru.netology.nmedia.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.net.toUri
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.PostAdapter
 import ru.netology.nmedia.adapter.PostListener
-import ru.netology.nmedia.databinding.ActivityMainBinding
+import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.fragment.PostFragment.Companion.idArg
 import ru.netology.nmedia.viewmodel.PostViewModel
 
-class MainActivity : AppCompatActivity() {
-    private val viewModel: PostViewModel by viewModels()
-    val postContract = registerForActivityResult(NewPostContract) { result ->
-        if (result == null) {
-            viewModel.cancelEdit()
-            return@registerForActivityResult
-        }
-        viewModel.save(result)
-    }
+class FeedFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(
-                systemBars.left,
-                systemBars.top,
-                systemBars.right,
-                systemBars.bottom
-            )
-            insets
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val binding = FragmentFeedBinding.inflate(layoutInflater)
+
+
+        val viewModel: PostViewModel by activityViewModels()
 
         val adapter = PostAdapter(
             object : PostListener {
@@ -66,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onEdit(post: Post) {
                     viewModel.edit(post)
-                    postContract.launch(post.content)
+                    //postContract.launch(post.content)
                 }
 
                 override fun onPlayVideo(post: Post) {
@@ -74,17 +62,27 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent(Intent.ACTION_VIEW, videoUrl.toUri())
                     startActivity(intent)
                 }
+
+                override fun onPostClick(post: Post) {
+                    findNavController().navigate(
+                        R.id.action_feedFragment_to_postFragment,
+                        Bundle().apply {
+                            idArg = post.id.toString() // Передаем ID поста во фрагмент деталей
+                        }
+                    )
+                }
             }
         )
 
         binding.list.adapter = adapter
-
-        viewModel.data.observe(this) { posts ->
+        viewModel.data.observe(viewLifecycleOwner) { posts ->
             adapter.submitList(posts)
         }
 
         binding.add.setOnClickListener {
-            postContract.launch(null)
+            findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
+
+        return binding.root
     }
 }
