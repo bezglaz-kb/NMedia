@@ -14,6 +14,7 @@ import ru.netology.nmedia.adapter.PostAdapter
 import ru.netology.nmedia.adapter.PostListener
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.fragment.NewPostFragment.Companion.contentArg
 import ru.netology.nmedia.fragment.PostFragment.Companion.idArg
 import ru.netology.nmedia.viewmodel.PostViewModel
 
@@ -54,7 +55,12 @@ class FeedFragment : Fragment() {
 
                 override fun onEdit(post: Post) {
                     viewModel.edit(post)
-                    //postContract.launch(post.content)
+                    findNavController().navigate(
+                        R.id.action_feedFragment_to_newPostFragment,
+                        Bundle().apply {
+                            contentArg = post.content
+                        }
+                    )
                 }
 
                 override fun onPlayVideo(post: Post) {
@@ -80,6 +86,7 @@ class FeedFragment : Fragment() {
         }
 
         binding.add.setOnClickListener {
+            viewModel.cancelEdit()
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
 

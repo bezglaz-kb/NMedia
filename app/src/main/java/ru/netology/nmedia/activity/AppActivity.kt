@@ -10,7 +10,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.ActivityAppBinding
-import ru.netology.nmedia.fragment.NewPostFragment
 import ru.netology.nmedia.fragment.NewPostFragment.Companion.contentArg
 
 class AppActivity : AppCompatActivity() {
