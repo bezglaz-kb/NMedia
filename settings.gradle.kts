@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "NMedia"
 include(":app")
- 

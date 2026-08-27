@@ -9,4 +9,8 @@
     <string name="chooser_share_post">Поделиться постом</string>
     <string name="description_post_save">Сохранить</string>
     <string name="description_video">Изображение видеоролика</string>
+    <string name="notification_user_liked">%1$s поставил лайк посту %2$s</string>
+    <string name="channel_remote_name">Уведомления с сервера</string>
+    <string name="channel_remote_description">Уведомления с удалённого сервера</string>
+    <string name="notification_user_posted" >%1$s опубликовал новый пост:\n%2$s</string>
 </resources>
