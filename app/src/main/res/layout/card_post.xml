@@ -97,6 +97,7 @@
         app:layout_constraintEnd_toEndOf="@id/videoWallpaper" />
 
     <androidx.constraintlayout.widget.Group
+        android:visibility="gone"
         android:id="@+id/videoGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
