@@ -46,25 +46,25 @@ class PostAdapter(
         fun bind(post: Post) {
             with(binding) {
                 author.text = post.author
-                published.text = post.published
+                published.text = post.published.toString()
                 content.text = post.content
                 avatar.setImageResource(R.drawable.post_avatar_drawable)
                 like.text = formatCount(post.likes)
-                share.text = formatCount(post.shares)
-                countViews.text = formatCount(post.views)
-
-                if (!post.video.isNullOrBlank()) {
-                    videoGroup.visibility = View.VISIBLE
-
-                    videoWallpaper.setOnClickListener {
-                        listener.onPlayVideo(post)
-                    }
-                    videoPlayButton.setOnClickListener {
-                        listener.onPlayVideo(post)
-                    }
-                } else {
-                    videoGroup.visibility = View.GONE
-                }
+//                share.text = formatCount(post.shares)
+//                countViews.text = formatCount(post.views)
+//
+//                if (!post.video.isNullOrBlank()) {
+//                    videoGroup.visibility = View.VISIBLE
+//
+//                    videoWallpaper.setOnClickListener {
+//                        listener.onPlayVideo(post)
+//                    }
+//                    videoPlayButton.setOnClickListener {
+//                        listener.onPlayVideo(post)
+//                    }
+//                } else {
+//                    videoGroup.visibility = View.GONE
+//                }
 
                 like.isChecked = post.likedByMe
 
