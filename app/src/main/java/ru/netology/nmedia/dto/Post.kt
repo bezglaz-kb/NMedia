@@ -1,13 +1,12 @@
 package ru.netology.nmedia.dto
 
+import java.time.Instant
+
 data class Post(
-    val id: Long = 0L,
-    val author: String = "",
-    val published: String = "",
-    val content: String = "",
+    val id: Long,
+    val author: String,
+    val content: String,
+    val published: Instant,
+    val likedByMe: Boolean,
     val likes: Int = 0,
-    val likedByMe: Boolean = false,
-    val shares: Int = 0,
-    val views: Int = 0,
-    val video: String? = null
 )
