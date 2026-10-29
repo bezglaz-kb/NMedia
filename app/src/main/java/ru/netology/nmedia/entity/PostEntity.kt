@@ -13,6 +13,7 @@ data class PostEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val author: String,
+    val authorAvatar: String?,
     val content: String,
     val published: Long,
     val likedByMe: Boolean,
@@ -26,6 +27,7 @@ data class PostEntity(
     fun toPost(): Post = Post(
         id = this.id,
         author = this.author,
+        authorAvatar = this.authorAvatar,
         content = this.content,
         published = java.time.Instant.ofEpochMilli(published),
         likedByMe = this.likedByMe,
@@ -41,6 +43,7 @@ data class PostEntity(
             PostEntity(
                 id = post.id,
                 author = post.author,
+                authorAvatar = post.authorAvatar,
                 content = post.content,
                 published = post.published.toEpochMilli(),
                 likedByMe = post.likedByMe,

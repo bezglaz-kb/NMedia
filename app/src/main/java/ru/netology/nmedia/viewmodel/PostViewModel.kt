@@ -16,6 +16,7 @@ import java.time.Instant
 private val emptyPost = Post(
     id = 0L,
     author = "",
+    authorAvatar = "",
     content = "",
     published = Instant.now(),
     likedByMe = false,

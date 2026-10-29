@@ -40,7 +40,7 @@ class PostFragment : Fragment() {
                 author.text = post.author
                 published.text = post.published.toString()
                 content.text = post.content
-                avatar.setImageResource(R.drawable.post_avatar_drawable)
+                avatarImageView.setImageResource(R.drawable.post_avatar_drawable)
 
                 like.text = formatCount(post.likes)
                 //share.text = formatCount(post.shares)
