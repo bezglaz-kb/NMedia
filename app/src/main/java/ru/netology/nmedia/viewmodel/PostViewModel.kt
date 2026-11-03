@@ -34,6 +34,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
+    private val _errorEvent = SingleLiveEvent<String>()
+    val errorEvent: LiveData<String>
+        get() = _errorEvent
+
     init {
         load()
     }
@@ -72,7 +76,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
-                e.printStackTrace()
+                _errorEvent.postValue("Ошибка. Не удалось изменить статус лайка.")
             }
         })
     }
@@ -85,7 +89,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
-                e.printStackTrace()
+                _errorEvent.postValue("Ошибка удаления поста.")
             }
         })
     }
@@ -100,7 +104,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
-                e.printStackTrace()
+                _errorEvent.postValue("Ошибка сохранения поста.")
             }
         })
         edited.value = emptyPost

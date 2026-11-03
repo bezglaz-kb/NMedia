@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -87,6 +88,10 @@ class FeedFragment : Fragment() {
             binding.progress.isVisible = state.loading
             binding.emptyText.isVisible = state.empty
             binding.errorGroup.isVisible = state.error
+        }
+
+        viewModel.errorEvent.observe(viewLifecycleOwner) { errorMessage ->
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
 
         binding.retry.setOnClickListener {
