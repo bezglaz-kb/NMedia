@@ -29,8 +29,8 @@ class PostFragment : Fragment() {
 
         val postId = arguments?.idArg?.toLongOrNull() ?: findNavController().navigateUp()
 
-        viewModel.data.observe(viewLifecycleOwner) { posts ->
-            val post = posts.find { it.id == postId }
+        viewModel.data.observe(viewLifecycleOwner) { state ->
+            val post = state.posts.find { it.id == postId }
             if (post == null) {
                 findNavController().navigateUp()
                 return@observe
@@ -38,26 +38,26 @@ class PostFragment : Fragment() {
 
             with(binding.postCard) {
                 author.text = post.author
-                published.text = post.published
+                published.text = post.published.toString()
                 content.text = post.content
-                avatar.setImageResource(R.drawable.post_avatar_drawable)
+                avatarImageView.setImageResource(R.drawable.post_avatar_drawable)
 
                 like.text = formatCount(post.likes)
-                share.text = formatCount(post.shares)
+                //share.text = formatCount(post.shares)
 
                 like.isChecked = post.likedByMe
 
-                if (!post.video.isNullOrBlank()) {
-                    videoGroup.visibility = View.VISIBLE
-                    val playVideoAction = View.OnClickListener {
-                        val intent = Intent(Intent.ACTION_VIEW, post.video.toUri())
-                        startActivity(intent)
-                    }
-                    videoWallpaper.setOnClickListener(playVideoAction)
-                    videoPlayButton.setOnClickListener(playVideoAction)
-                } else {
-                    videoGroup.visibility = View.GONE
-                }
+//                if (!post.video.isNullOrBlank()) {
+//                    videoGroup.visibility = View.VISIBLE
+//                    val playVideoAction = View.OnClickListener {
+//                        val intent = Intent(Intent.ACTION_VIEW, post.video.toUri())
+//                        startActivity(intent)
+//                    }
+//                    videoWallpaper.setOnClickListener(playVideoAction)
+//                    videoPlayButton.setOnClickListener(playVideoAction)
+//                } else {
+//                    videoGroup.visibility = View.GONE
+//                }
 
                 like.setOnClickListener {
                     viewModel.likeById(post.id)

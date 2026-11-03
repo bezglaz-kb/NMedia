@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -63,11 +65,11 @@ class FeedFragment : Fragment() {
                     )
                 }
 
-                override fun onPlayVideo(post: Post) {
-                    val videoUrl = post.video ?: return
-                    val intent = Intent(Intent.ACTION_VIEW, videoUrl.toUri())
-                    startActivity(intent)
-                }
+//                override fun onPlayVideo(post: Post) {
+//                    val videoUrl = post.video ?: return
+//                    val intent = Intent(Intent.ACTION_VIEW, videoUrl.toUri())
+//                    startActivity(intent)
+//                }
 
                 override fun onPostClick(post: Post) {
                     findNavController().navigate(
@@ -81,8 +83,19 @@ class FeedFragment : Fragment() {
         )
 
         binding.list.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { posts ->
-            adapter.submitList(posts)
+        viewModel.data.observe(viewLifecycleOwner) { state ->
+            adapter.submitList(state.posts)
+            binding.progress.isVisible = state.loading
+            binding.emptyText.isVisible = state.empty
+            binding.errorGroup.isVisible = state.error
+        }
+
+        viewModel.errorEvent.observe(viewLifecycleOwner) { errorMessage ->
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+        }
+
+        binding.retry.setOnClickListener {
+            viewModel.load()
         }
 
         binding.add.setOnClickListener {

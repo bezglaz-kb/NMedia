@@ -26,12 +26,18 @@ class NewPostFragment : Fragment() {
         binding.edit.setText(arguments?.contentArg)
 
         AndroidUtils.showKeyboard(binding.edit)
+
+        viewModel.postCreated.observe(viewLifecycleOwner){
+            AndroidUtils.hideKeyboard(requireView())
+            findNavController().navigateUp()
+        }
+
         binding.ok.setOnClickListener {
             if (!binding.edit.text.isNullOrBlank()) {
                 val content = binding.edit.text.toString()
+                viewModel.changeContent(content)
                 viewModel.save(content)
             }
-            findNavController().navigateUp()
         }
 
             return binding.root
