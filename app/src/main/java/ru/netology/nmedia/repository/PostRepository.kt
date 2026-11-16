@@ -4,9 +4,10 @@ import androidx.lifecycle.LiveData
 import ru.netology.nmedia.dto.Post
 
 interface PostRepository {
-    fun getData(): LiveData<List<Post>>
-    fun likeById(id: Long)
-    fun shareById(id: Long)
-    fun removeById(id: Long)
-    fun save (post: Post)
+    val data: LiveData<List<Post>>
+    suspend fun getAll()
+    suspend fun likeById(id: Long)
+    suspend fun removeById(id: Long)
+    suspend fun save(post: Post): Post
+    suspend fun shareById(id: Long)
 }

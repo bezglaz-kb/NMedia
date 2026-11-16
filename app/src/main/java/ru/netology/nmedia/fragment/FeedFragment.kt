@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.PostAdapter
 import ru.netology.nmedia.adapter.PostListener
@@ -63,11 +66,11 @@ class FeedFragment : Fragment() {
                     )
                 }
 
-                override fun onPlayVideo(post: Post) {
-                    val videoUrl = post.video ?: return
-                    val intent = Intent(Intent.ACTION_VIEW, videoUrl.toUri())
-                    startActivity(intent)
-                }
+//                override fun onPlayVideo(post: Post) {
+//                    val videoUrl = post.video ?: return
+//                    val intent = Intent(Intent.ACTION_VIEW, videoUrl.toUri())
+//                    startActivity(intent)
+//                }
 
                 override fun onPostClick(post: Post) {
                     findNavController().navigate(
@@ -81,9 +84,24 @@ class FeedFragment : Fragment() {
         )
 
         binding.list.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { posts ->
-            adapter.submitList(posts)
+        viewModel.data.observe(viewLifecycleOwner) { state ->
+            adapter.submitList(state.posts)
+            binding.emptyText.isVisible = state.empty
         }
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            binding.progress.isVisible = state.loading
+            binding.swipeRefreshLayout.isRefreshing = state.refreshing
+           if (state.error) {
+               Snackbar.make(binding.root, R.string.network_error, Snackbar.LENGTH_LONG)
+                   .setAction(R.string.retry) {
+                       viewModel.load()
+                   }
+                   .show()
+           }
+        }
+
+        binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refresh() }
 
         binding.add.setOnClickListener {
             viewModel.cancelEdit()
