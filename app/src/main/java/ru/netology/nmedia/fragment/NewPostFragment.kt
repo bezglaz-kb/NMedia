@@ -36,7 +36,7 @@ class NewPostFragment : Fragment() {
             if (!binding.edit.text.isNullOrBlank()) {
                 val content = binding.edit.text.toString()
                 viewModel.changeContent(content)
-                viewModel.save(content)
+                viewModel.save()
             }
         }
 
