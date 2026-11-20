@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.PostAdapter
@@ -84,21 +85,43 @@ class FeedFragment : Fragment() {
         )
 
         binding.list.adapter = adapter
+
+        var shouldScrollToTop = false
+
         viewModel.data.observe(viewLifecycleOwner) { state ->
-            adapter.submitList(state.posts)
+            adapter.submitList(state.posts) {
+                if (shouldScrollToTop) {
+                    binding.list.smoothScrollToPosition(0)
+                    shouldScrollToTop = false
+                }
+            }
             binding.emptyText.isVisible = state.empty
         }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             binding.progress.isVisible = state.loading
             binding.swipeRefreshLayout.isRefreshing = state.refreshing
-           if (state.error) {
-               Snackbar.make(binding.root, R.string.network_error, Snackbar.LENGTH_LONG)
-                   .setAction(R.string.retry) {
-                       viewModel.load()
-                   }
-                   .show()
-           }
+            if (state.error) {
+                Snackbar.make(binding.root, R.string.network_error, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.retry) {
+                        viewModel.load()
+                    }
+                    .show()
+            }
+        }
+
+        viewModel.newerCount.observe(viewLifecycleOwner) { count ->
+            println(count)
+            if (count > 0) {
+                binding.newerPostsButton.isVisible = true
+                binding.newerPostsButton.text = "Свежие записи"
+            }
+        }
+
+        binding.newerPostsButton.setOnClickListener {
+            binding.newerPostsButton.isVisible = false
+            shouldScrollToTop = true
+            viewModel.showNewPosts()
         }
 
         binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refresh() }

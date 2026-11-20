@@ -1,20 +1,26 @@
 package ru.netology.nmedia.repository
 
-
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import okhttp3.Dispatcher
 import ru.netology.nmedia.api.PostApi
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.PostEntity
+import ru.netology.nmedia.error.ApiError
+import ru.netology.nmedia.error.AppError
 import java.io.IOException
+import kotlin.concurrent.thread
 
-class PostRepositoryImpl(
-    private val dao: PostDao,
-) : PostRepository {
-    override val data: LiveData<List<Post>> = dao.getData().map {
-        it.map(PostEntity::toPost)
-    }
+class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
+    override val data = dao.getData()
+        .map { posts -> posts.map { it.toPost() } }
 
     override suspend fun getAll() {
         val posts = PostApi.service.getAll()
@@ -28,7 +34,6 @@ class PostRepositoryImpl(
     }
 
     override suspend fun removeById(id: Long) {
-        // 1. Сохраняем копию поста на случай ошибки сети
         val backup = dao.getById(id)
 
         try {
@@ -62,5 +67,24 @@ class PostRepositoryImpl(
 
     override suspend fun shareById(id: Long) {
         dao.shareById(id)
+    }
+
+    override fun getNewer(id: Long): Flow<Int> = flow {
+        while (true) {
+            delay(10_000)
+            val response = PostApi.service.getNewer(id)
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+            val body = response.body() ?: throw ApiError(response.code(), response.message())
+            dao.insert(body.map { PostEntity.fromPost(it, hidden = true) })
+            emit(body.size)
+        }
+    }
+        .catch { e -> throw AppError.from(e) }
+        .flowOn(Dispatchers.Default)
+
+    override suspend fun showAll() {
+        dao.showAll()
     }
 }

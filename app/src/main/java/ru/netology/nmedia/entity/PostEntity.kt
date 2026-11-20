@@ -20,7 +20,8 @@ data class PostEntity(
     val likes: Int = 0,
     val shares: Int = 0,
     val views: Int = 0,
-    val video: String? = null
+    val video: String? = null,
+    val hidden: Boolean = false,
 ) {
 
     @SuppressLint("NewApi")
@@ -39,7 +40,7 @@ data class PostEntity(
 
     companion object {
         @SuppressLint("NewApi")
-        fun fromPost(post: Post): PostEntity = with(post) {
+        fun fromPost(post: Post, hidden: Boolean = false): PostEntity = with(post) { // <-- проверьте, что здесь есть ", hidden: Boolean = false"
             PostEntity(
                 id = post.id,
                 author = post.author,
@@ -48,6 +49,7 @@ data class PostEntity(
                 published = post.published.toEpochMilli(),
                 likedByMe = post.likedByMe,
                 likes = post.likes,
+                hidden = hidden,
 //                shares = post.shares,
 //                views = post.views,
 //                video = post.video
