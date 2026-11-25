@@ -5,18 +5,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.PostAdapter
 import ru.netology.nmedia.adapter.PostListener
 import ru.netology.nmedia.databinding.FragmentFeedBinding
+import ru.netology.nmedia.dto.Attachment
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.fragment.NewPostFragment.Companion.contentArg
 import ru.netology.nmedia.fragment.PostFragment.Companion.idArg
 import ru.netology.nmedia.viewmodel.PostViewModel
+import ru.netology.nmedia.fragment.ImageFragment.Companion.imageUrlArg
 
 class FeedFragment : Fragment() {
 
@@ -63,10 +66,13 @@ class FeedFragment : Fragment() {
                     )
                 }
 
-                override fun onPlayVideo(post: Post) {
-                    val videoUrl = post.video ?: return
-                    val intent = Intent(Intent.ACTION_VIEW, videoUrl.toUri())
-                    startActivity(intent)
+                override fun onAttachmentClick(attachment: Attachment) {
+                    findNavController().navigate(
+                        R.id.action_feedFragment_to_imageFragment,
+                        Bundle().apply {
+                            imageUrlArg = attachment.url
+                        }
+                    )
                 }
 
                 override fun onPostClick(post: Post) {
@@ -81,9 +87,46 @@ class FeedFragment : Fragment() {
         )
 
         binding.list.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { posts ->
-            adapter.submitList(posts)
+
+        var shouldScrollToTop = false
+
+        viewModel.data.observe(viewLifecycleOwner) { state ->
+            adapter.submitList(state.posts) {
+                if (shouldScrollToTop) {
+                    binding.list.smoothScrollToPosition(0)
+                    shouldScrollToTop = false
+                }
+            }
+            binding.emptyText.isVisible = state.empty
         }
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            binding.progress.isVisible = state.loading
+            binding.swipeRefreshLayout.isRefreshing = state.refreshing
+            if (state.error) {
+                Snackbar.make(binding.root, R.string.network_error, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.retry) {
+                        viewModel.load()
+                    }
+                    .show()
+            }
+        }
+
+        viewModel.newerCount.observe(viewLifecycleOwner) { count ->
+            println(count)
+            if (count > 0) {
+                binding.newerPostsButton.isVisible = true
+                binding.newerPostsButton.text = "Свежие записи"
+            }
+        }
+
+        binding.newerPostsButton.setOnClickListener {
+            binding.newerPostsButton.isVisible = false
+            shouldScrollToTop = true
+            viewModel.showNewPosts()
+        }
+
+        binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refresh() }
 
         binding.add.setOnClickListener {
             viewModel.cancelEdit()

@@ -20,4 +20,10 @@
     <string name="channel_remote_name">Server notifications</string>
     <string name="channel_remote_description">Notifications from remote server</string>
     <string name="notification_user_posted" >%1$s posted new post:\n%2$s</string>
+    <string name="no_posts">No posts</string>
+    <string name="network_error">Network error</string>
+    <string name="retry">Retry</string>
+    <string name="save">Save</string>
+    <string name="image_picker_error">Image picker error</string>
+    <string name="post_attachment">Post attachment</string>
 </resources>

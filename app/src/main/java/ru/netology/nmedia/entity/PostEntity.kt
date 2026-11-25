@@ -1,9 +1,13 @@
 package ru.netology.nmedia.entity
 
+import android.annotation.SuppressLint
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import ru.netology.nmedia.dto.Attachment
 import ru.netology.nmedia.dto.Post
+import java.time.Instant
 
 @Entity()
 data class PostEntity(
@@ -11,39 +15,50 @@ data class PostEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val author: String,
+    val authorAvatar: String?,
     val content: String,
-    val published: String,
+    val published: Long,
     val likedByMe: Boolean,
     val likes: Int = 0,
     val shares: Int = 0,
     val views: Int = 0,
-    val video: String? = null
+    val video: String? = null,
+    val hidden: Boolean = false,
+    @Embedded
+    val attachment: Attachment?,
 ) {
 
+    @SuppressLint("NewApi")
     fun toPost(): Post = Post(
         id = this.id,
         author = this.author,
+        authorAvatar = this.authorAvatar,
         content = this.content,
-        published = this.published,
+        published = java.time.Instant.ofEpochMilli(published),
         likedByMe = this.likedByMe,
         likes = this.likes,
-        shares = this.shares,
-        views = this.views,
-        video = this.video
+        attachment = this.attachment,
+//        shares = this.shares,
+//        views = this.views,
+//        video = this.video
     )
 
     companion object {
-        fun fromPost(post: Post): PostEntity = with(post) {
+        @SuppressLint("NewApi")
+        fun fromPost(post: Post, hidden: Boolean = false): PostEntity = with(post) { // <-- проверьте, что здесь есть ", hidden: Boolean = false"
             PostEntity(
                 id = post.id,
                 author = post.author,
+                authorAvatar = post.authorAvatar,
                 content = post.content,
-                published = post.published,
+                published = post.published.toEpochMilli(),
                 likedByMe = post.likedByMe,
                 likes = post.likes,
-                shares = post.shares,
-                views = post.views,
-                video = post.video
+                hidden = hidden,
+                attachment = post.attachment,
+//                shares = post.shares,
+//                views = post.views,
+//                video = post.video
             )
         }
     }

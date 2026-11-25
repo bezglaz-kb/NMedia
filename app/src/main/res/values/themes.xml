@@ -1,8 +1,20 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://android.com">
     <!-- Base application theme. -->
-    <style name="Base.Theme.NMedia" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Base.Theme.NMedia" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Основной фиолетовый цвет ActionBar и кнопок -->
+        <item name="colorPrimary">#6200EE</item>
+        <!-- Темно-фиолетовый цвет статус-бара -->
+        <item name="colorPrimaryVariant">#3700B3</item>
+        <!-- Цвет текста и иконок поверх фиолетового фона -->
+        <item name="colorOnPrimary">#FFFFFF</item>
+
+        <!-- Акцентный цвет (для FAB-кнопки плюса внизу) -->
+        <item name="colorSecondary">#03DAC5</item>
+        <item name="colorSecondaryVariant">#018786</item>
+        <item name="colorOnSecondary">#000000</item>
+
+        <!-- Цвет системной строки состояния (часы, батарея) -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 
     <style name="Theme.NMedia" parent="Base.Theme.NMedia" />

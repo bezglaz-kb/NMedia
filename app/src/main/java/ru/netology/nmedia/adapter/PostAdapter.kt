@@ -1,14 +1,17 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
+import ru.netology.nmedia.dto.Attachment
+import ru.netology.nmedia.dto.AttachmentType
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.formatCount
 
@@ -19,6 +22,7 @@ interface PostListener {
     fun onEdit(post: Post)
     fun onPlayVideo(post: Post) {}
     fun onPostClick (post: Post)
+    fun onAttachmentClick(attachment: Attachment) {}
 }
 
 class PostAdapter(
@@ -46,26 +50,41 @@ class PostAdapter(
         fun bind(post: Post) {
             with(binding) {
                 author.text = post.author
-                published.text = post.published
+                published.text = post.published.toString()
                 content.text = post.content
-                avatar.setImageResource(R.drawable.post_avatar_drawable)
-                like.text = formatCount(post.likes)
-                share.text = formatCount(post.shares)
-                countViews.text = formatCount(post.views)
+                val BASE_URL = "http://10.0.2.2:9999"
+                val avatarUrl = post.authorAvatar?.let { filename ->
+                    "$BASE_URL/avatars/$filename"
+                }
+                binding.avatarImageView.setImageResource(0)
+                Glide.with(itemView.context)
+                    .load(avatarUrl)
+                    .placeholder(R.drawable.ic_loading_avatar)
+                    .error(R.drawable.ic_error_avatar)
+                    .circleCrop()
+                    .timeout(15_000)
+                    .into(binding.avatarImageView)
 
-                if (!post.video.isNullOrBlank()) {
-                    videoGroup.visibility = View.VISIBLE
+                val postAttachment = post.attachment
+                if (postAttachment != null && postAttachment.type == AttachmentType.IMAGE) {
+                    attachment.isVisible = true
+                    Glide.with(itemView.context)
+                        .load("$BASE_URL/media/${postAttachment.url}")
+                        .timeout(15_000)
+                        .into(attachment)
 
-                    videoWallpaper.setOnClickListener {
-                        listener.onPlayVideo(post)
-                    }
-                    videoPlayButton.setOnClickListener {
-                        listener.onPlayVideo(post)
+                    attachment.setOnClickListener {
+                        listener.onAttachmentClick(postAttachment)
                     }
                 } else {
-                    videoGroup.visibility = View.GONE
+                    attachment.isVisible = false
+                    attachment.setImageResource(0)
+                    attachment.setOnClickListener(null)
                 }
 
+
+
+                like.text = formatCount(post.likes)
                 like.isChecked = post.likedByMe
 
                 menu.setOnClickListener {

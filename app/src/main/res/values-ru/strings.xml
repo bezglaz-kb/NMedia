@@ -13,4 +13,10 @@
     <string name="channel_remote_name">Уведомления с сервера</string>
     <string name="channel_remote_description">Уведомления с удалённого сервера</string>
     <string name="notification_user_posted" >%1$s опубликовал новый пост:\n%2$s</string>
+    <string name="no_posts">Постов пока нет</string>
+    <string name="network_error">Ошибка соединения</string>
+    <string name="retry">Повторить</string>
+    <string name="save">Сохранить</string>
+    <string name="image_picker_error">Ошибка выбора изображения</string>
+    <string name="post_attachment">Приложение к посту</string>
 </resources>
