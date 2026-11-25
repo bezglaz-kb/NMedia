@@ -2,8 +2,10 @@ package ru.netology.nmedia.entity
 
 import android.annotation.SuppressLint
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import ru.netology.nmedia.dto.Attachment
 import ru.netology.nmedia.dto.Post
 import java.time.Instant
 
@@ -22,6 +24,8 @@ data class PostEntity(
     val views: Int = 0,
     val video: String? = null,
     val hidden: Boolean = false,
+    @Embedded
+    val attachment: Attachment?,
 ) {
 
     @SuppressLint("NewApi")
@@ -33,6 +37,7 @@ data class PostEntity(
         published = java.time.Instant.ofEpochMilli(published),
         likedByMe = this.likedByMe,
         likes = this.likes,
+        attachment = this.attachment,
 //        shares = this.shares,
 //        views = this.views,
 //        video = this.video
@@ -50,6 +55,7 @@ data class PostEntity(
                 likedByMe = post.likedByMe,
                 likes = post.likes,
                 hidden = hidden,
+                attachment = post.attachment,
 //                shares = post.shares,
 //                views = post.views,
 //                video = post.video

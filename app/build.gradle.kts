@@ -77,4 +77,6 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0")
+    implementation(libs.imagepicker)
+    implementation("com.github.yalantis:ucrop:2.2.11")
 }

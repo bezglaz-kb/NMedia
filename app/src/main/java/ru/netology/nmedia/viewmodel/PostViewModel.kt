@@ -2,6 +2,7 @@ package ru.netology.nmedia.viewmodel
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,9 +17,11 @@ import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModel
 import ru.netology.nmedia.model.FeedModelState
+import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositoryImpl
 import ru.netology.nmedia.util.SingleLiveEvent
+import java.io.File
 import java.time.Instant
 
 @SuppressLint("NewApi")
@@ -97,7 +100,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             edited.value?.let {
                 try {
-                    repository.save(it)
+                    repository.save(it, photo.value?.file)
                     _postCreated.value = Unit
                 } catch (_: Exception) {
                     _state.value = FeedModelState(error = true)
@@ -106,6 +109,25 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             edited.value = emptyPost
         }
     }
+
+//    fun save() {
+//        android.util.Log.d("DEBUG_SAVE", "3. ViewModel.save(), edited = ${edited.value}")
+//        viewModelScope.launch {
+//            edited.value?.let {
+//                try {
+//                    android.util.Log.d("DEBUG_SAVE", "4. Отправляем в репозиторий")
+//                    repository.save(it, photo.value?.file)
+//                    android.util.Log.d("DEBUG_SAVE", "5. Успешно сохранено!")
+//                    _postCreated.value = Unit
+//                    edited.value = emptyPost
+//                    _photo.value = null
+//                } catch (e: Exception) {
+//                    android.util.Log.e("DEBUG_SAVE", "Ошибка при сохранении", e)
+//                    _state.value = FeedModelState(error = true)
+//                }
+//            }
+//        }
+//    }
 
     fun changeContent(content: String) {
         val text = content.trim()
@@ -151,5 +173,17 @@ fun removeById(id: Long) {
 
     fun showNewPosts() = viewModelScope.launch {
         repository.showAll()
+    }
+
+    private val _photo = MutableLiveData<PhotoModel>(null)
+    val photo: LiveData<PhotoModel?>
+        get() = _photo
+    fun changePhoto (uri: Uri, file: File) {
+        _photo.value = PhotoModel(uri, file)
+
+    }
+
+    fun removePhoto() {
+        _photo.value = null
     }
 }

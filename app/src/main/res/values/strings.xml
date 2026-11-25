@@ -23,4 +23,7 @@
     <string name="no_posts">No posts</string>
     <string name="network_error">Network error</string>
     <string name="retry">Retry</string>
+    <string name="save">Save</string>
+    <string name="image_picker_error">Image picker error</string>
+    <string name="post_attachment">Post attachment</string>
 </resources>
